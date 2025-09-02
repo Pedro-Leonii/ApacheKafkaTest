@@ -1,0 +1,79 @@
+networks:
+  cluster-net:
+    driver: bridge
+
+x-broker-common-env: &common-env
+  KAFKA_PROCESS_ROLES: broker,controller
+  KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker1:9093,2@broker2:9093,3@broker3:9093
+  KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
+  KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
+  KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+  CLUSTER_ID: 8cQAdE44QTWV_0HLozHOOQ 
+
+services:
+  broker1:
+    image: apache/kafka:latest
+    hostname: broker1
+    container_name: broker1
+    environment:
+      <<: *common-env 
+      KAFKA_NODE_ID: 1
+      KAFKA_BROKER_ID: 1
+      KAFKA_LISTENERS: PLAINTEXT://broker1:9092,CONTROLLER://broker1:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker1:9092
+    volumes:
+      - ./broker1/data:/var/lib/kafka/data
+    networks:
+      - cluster-net
+
+  broker2:
+    image: apache/kafka:latest
+    hostname: broker2
+    container_name: broker2
+    environment:
+      <<: *common-env
+      KAFKA_NODE_ID: 2
+      KAFKA_BROKER_ID: 2
+      KAFKA_LISTENERS: PLAINTEXT://broker2:9092,CONTROLLER://broker2:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker2:9092
+    volumes:
+      - ./broker2/data:/var/lib/kafka/data
+    networks:
+      - cluster-net
+
+  broker3:
+    image: apache/kafka:latest
+    hostname: broker3
+    container_name: broker3
+    environment:
+      <<: *common-env
+      KAFKA_NODE_ID: 3
+      KAFKA_BROKER_ID: 3
+      KAFKA_LISTENERS: PLAINTEXT://broker3:9092,CONTROLLER://broker3:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker3:9092
+    volumes:
+      - ./broker3/data:/var/lib/kafka/data
+    networks:
+      - cluster-net
+ 
+  topic-creator:
+    image: apache/kafka:latest
+    depends_on:
+      - broker1
+      - broker2
+      - broker3
+    command:
+      - bin/sh
+      - -c
+      - |
+        sleep 5 
+        /opt/kafka/bin/kafka-topics.sh --create --topic server.metrics --partitions 12 --replication-factor 3 --config min.insync.replicas=2 --bootstrap-server broker1:9092, broker2:9092, broker3:9092
+        /opt/kafka/bin/kafka-topics.sh --create --topic server.logs.application --partitions 12 --replication-factor 3 --config min.insync.replicas=2 --bootstrap-server broker1:9092, broker2:9092, broker3:9092
+        /opt/kafka/bin/kafka-topics.sh --create --topic server.logs.access --partitions 12 --replication-factor 3 --config min.insync.replicas=2 --bootstrap-server broker1:9092, broker2:9092, broker3:9092 
+        /opt/kafka/bin/kafka-topics.sh --create --topic server.logs.db --partitions 12 --replication-factor 3 --config min.insync.replicas=2 --bootstrap-server broker1:9092, broker2:9092, broker3:9092 
+    networks:
+      - cluster-net
+      
+
+
+
