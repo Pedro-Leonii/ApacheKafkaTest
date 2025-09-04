@@ -29,3 +29,6 @@ Topic definiti:
 - server.logs.application
 - server.logs.access
 - server.logs.db
+
+## Schemi dei messaggi
+Per semplicità non viene utilizzato uno schema registry, invece sono i producer che impongono lo schema utilizzando JSON.
