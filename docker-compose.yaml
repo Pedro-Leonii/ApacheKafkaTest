@@ -62,15 +62,10 @@ services:
       - broker1
       - broker2
       - broker3
-    command:
-      - bin/sh
-      - -c
-      - |
-        sleep 5 
-        /opt/kafka/bin/kafka-topics.sh --create --topic server.metrics --partitions 12 --replication-factor 3 --config min.insync.replicas=2 --bootstrap-server broker1:9092, broker2:9092, broker3:9092
-        /opt/kafka/bin/kafka-topics.sh --create --topic server.logs.application --partitions 12 --replication-factor 3 --config min.insync.replicas=2 --bootstrap-server broker1:9092, broker2:9092, broker3:9092
-        /opt/kafka/bin/kafka-topics.sh --create --topic server.logs.access --partitions 12 --replication-factor 3 --config min.insync.replicas=2 --bootstrap-server broker1:9092, broker2:9092, broker3:9092 
-        /opt/kafka/bin/kafka-topics.sh --create --topic server.logs.db --partitions 12 --replication-factor 3 --config min.insync.replicas=2 --bootstrap-server broker1:9092, broker2:9092, broker3:9092 
+    volumes:
+      - ./topics-creation.sh:/topics-creation.sh
+    entrypoint:
+      ["sh", "topics-creation.sh"]
     networks:
       - cluster-net
       
