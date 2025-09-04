@@ -10,6 +10,7 @@ x-broker-common-env: &common-env
   KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
   CLUSTER_ID: 8cQAdE44QTWV_0HLozHOOQ 
 
+
 services:
   broker1:
     image: apache/kafka:latest
@@ -68,7 +69,17 @@ services:
       ["sh", "topics-creation.sh"]
     networks:
       - cluster-net
-      
+    
+  producer:
+    build: ./producer_service/
+    stdin_open: true
+    tty: true 
+    environment:
+      BOOTSTRAP_SERVERS: "broker1:9092,broker2:9092,broker3:9092"
+      ACKS: "all"
+    networks:
+      - cluster-net
 
+  s3-proxy:
 
 
