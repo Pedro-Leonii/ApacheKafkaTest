@@ -87,11 +87,30 @@ services:
     networks:
       - global
     volumes:
-      - ./topics-creation.sh:/topics-creation.sh
-    entrypoint:
-      ["sh", "topics-creation.sh"]
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    container_name: schemaregistry
+    hostname: schemaregistry
+    ports:
+      - 8085:8085
+    healthcheck:
+      start_period: 10s
+      interval: 10s
+      retries: 20
+      test: curl --fail --silent --insecure http://schemaregistry:8085/subjects --output /dev/null || exit 1
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: broker1:9092,broker2:9092,broker3:9092
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8085
+      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+    depends_on:
+      broker1:
+        condition: service_healthy
+      broker2:
+        condition: service_healthy  
+      broker3:
+        condition: service_healthy
     networks:
-      - cluster-net
+      - global
     
   producer:
     build: ./producer_service/
