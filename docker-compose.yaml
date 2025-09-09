@@ -1,5 +1,5 @@
 networks:
-  cluster-net:
+  global:
     driver: bridge
 
 x-broker-common-env: &common-env
@@ -9,13 +9,18 @@ x-broker-common-env: &common-env
   KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
   KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
   CLUSTER_ID: 8cQAdE44QTWV_0HLozHOOQ 
-
+  KAFKA_LOG_DIRS: /tmp/kafka/data
 
 services:
   broker1:
     image: apache/kafka:latest
     hostname: broker1
     container_name: broker1
+    healthcheck:
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      test: /opt/kafka/bin/kafka-cluster.sh cluster-id --bootstrap-server broker1:9092 || exit 1
     environment:
       <<: *common-env 
       KAFKA_NODE_ID: 1
@@ -23,14 +28,19 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://broker1:9092,CONTROLLER://broker1:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker1:9092
     volumes:
-      - ./broker1/data:/var/lib/kafka/data
+      - ./broker1/data:/tmp/kafka/data
     networks:
-      - cluster-net
+      - global
 
   broker2:
     image: apache/kafka:latest
     hostname: broker2
     container_name: broker2
+    healthcheck:
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      test: /opt/kafka/bin/kafka-cluster.sh cluster-id --bootstrap-server broker2:9092 || exit 1
     environment:
       <<: *common-env
       KAFKA_NODE_ID: 2
@@ -38,14 +48,19 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://broker2:9092,CONTROLLER://broker2:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker2:9092
     volumes:
-      - ./broker2/data:/var/lib/kafka/data
+      - ./broker2/data:/tmp/kafka/data
     networks:
-      - cluster-net
+      - global
 
   broker3:
     image: apache/kafka:latest
     hostname: broker3
     container_name: broker3
+    healthcheck:
+      interval: 1s
+      timeout: 10s
+      retries: 20
+      test: /opt/kafka/bin/kafka-cluster.sh cluster-id --bootstrap-server broker3:9092 || exit 1
     environment:
       <<: *common-env
       KAFKA_NODE_ID: 3
@@ -53,16 +68,24 @@ services:
       KAFKA_LISTENERS: PLAINTEXT://broker3:9092,CONTROLLER://broker3:9093
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker3:9092
     volumes:
-      - ./broker3/data:/var/lib/kafka/data
+      - ./broker3/data:/tmp/kafka/data
     networks:
-      - cluster-net
+      - global
  
   topic-creator:
-    image: apache/kafka:latest
+    build: ./docker/topic_creator
+    image: topic-creator
+    container_name: topic-creator
+    hostname: topiccreator
     depends_on:
-      - broker1
-      - broker2
-      - broker3
+      broker1:
+        condition: service_healthy
+      broker2:
+        condition: service_healthy  
+      broker3:
+        condition: service_healthy
+    networks:
+      - global
     volumes:
       - ./topics-creation.sh:/topics-creation.sh
     entrypoint:
