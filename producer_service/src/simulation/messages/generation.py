@@ -3,7 +3,7 @@ import random
 from datetime import datetime
 
 import simulation.messages.data as data
-from simulation.messages.records import Severity, HttpMethod
+from simulation.messages.content import Severity, HttpMethod
 
 
 class IMetricGenerationStrategy(ABC):

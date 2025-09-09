@@ -1,0 +1,23 @@
+{
+    "name": "app_log",
+    "type": "record",
+    "fields": [
+        {
+            "name":"datetime",
+            "type": {"type": "long", "logicalType": "timestamp-millis"}
+        },
+        {
+            "name": "severity",
+            "type": "string"
+        },
+        {
+            "name": "thread",
+            "type": "string"
+        },
+        {
+            "name": "cls",
+            "type": "string"
+        }
+    ]
+    
+}

@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 version = "0.0"
 name ="producer-service"
 dependencies = [
-    "confluent-kafka",
+    "confluent-kafka[avro,schemaregistry]",
     "scipy"
 ]
 
@@ -15,4 +15,7 @@ start-simulation = "simulation.__main__:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]
+
+[tool.setuptools.package-data]
+"simulation.producers.schemas" = ["*.avsc"]
 

@@ -1,0 +1,39 @@
+{
+    "name": "access_log",
+    "type": "record",
+    "fields": [
+        {
+            "name":"datetime",
+            "type": {"type": "long", "logicalType": "timestamp-millis"}
+        },
+        {
+            "name": "ip",
+            "type": "string"
+        },
+        {
+            "name": "user",
+            "type": ["string", "null"]
+        },
+        {
+            "name": "status_code",
+            "type": "int"
+        },
+        {
+            "name": "dim",
+            "type": "int"
+        },
+        {
+            "name": "url",
+            "type": "string"
+        },
+        {
+            "name": "user_agent",
+            "type": "string"
+        },
+        {
+            "name": "method",
+            "type": "string"
+        }
+    ]
+    
+}

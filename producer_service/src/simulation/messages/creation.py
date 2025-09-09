@@ -1,6 +1,6 @@
 from abc import ABC, abstractmethod
 
-from simulation.messages.records import ISendable, Metrics, AppLog, AccessLog
+from simulation.messages.content import ISendable, Metrics, AppLog, AccessLog
 from simulation.messages.generation import IMetricGenerationStrategy, IApplicationLogGenerationStrategy, IAccessLogGenerationStrategy
 
 class ISendableFactory(ABC):

@@ -5,7 +5,7 @@ from threading import Thread, Event, Lock
 import scipy.stats as sts  
 
 from simulation.producers.producers import Producer, ProducerResults
-from simulation.producers.factories import ProducerFactory
+from simulation.producers.creation import ProducerFactory
 
 end_event: Event = Event()
 
@@ -22,8 +22,8 @@ def simulate_logs_generation(l: float) -> None:
     while(not end_event.is_set()):     
         t: float = Exp.rvs()
         time.sleep(t*60)
-        app_log_producer.produce(1)
-        access_log_producer.produce(random.randint(1,5))
+        access_log_producer.produce(1)
+        app_log_producer.produce(random.randint(1,5))
 
     app_log_producer.cleen_up()
     access_log_producer.cleen_up()
@@ -60,7 +60,7 @@ def main():
 
 
     th_logs = Thread(target=simulate_logs_generation, args=(100, ))
-    th_metrics = Thread(target=simulate_metrics_generation, args=(20,))
+    th_metrics = Thread(target=simulate_metrics_generation, args=(3,))
 
     th_logs.start()
     th_metrics.start()
@@ -77,7 +77,7 @@ def main():
 
     for r in results:
         print("-------------------------------------------")
-        print(f"Topic {r.topic} partizione {r.partition}")
+        print(f"Topic {r.topic}")
         print(f"Messaggi inviati correttamente: {r.n_sended}")
         print(f"Messaggi non inviati correttamente: {r.n_errors}")
         print("-------------------------------------------")

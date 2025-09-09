@@ -2,21 +2,21 @@ from abc import abstractmethod, ABC
 from enum import Enum
 from datetime import datetime
 
-from simulation.messages.serialization import ISerializerVisitor
 
 class ISendable(ABC):
-
+    
     @abstractmethod
-    def serialize(self, serializer: ISerializerVisitor) -> str|bytes:
+    def to_dict(self) -> dict:
         ...
+    
 
-class Severity(str, Enum):
+class Severity(Enum):
     SEVERE = "SEVERE"
     FINE = "FINE"
     WARNING = "WARNING"
     INFO = "INFO"
 
-class HttpMethod(str, Enum):
+class HttpMethod(Enum):
     GET = "GET"
     POST = "POST"
     PUT = "PUT"
@@ -59,8 +59,14 @@ class AppLog(ISendable):
     def cls(self) -> str:
         return self._cls
     
-    def serialize(self, serializer: ISerializerVisitor) -> str|bytes:
-        return serializer.serialize_application_log(self)
+    def to_dict(self)->dict:
+        return dict(    
+            datetime = self._datetime.timestamp()*1000,
+            severity = self._severity.name,
+            msg = self._msg,
+            thread = self._thread,
+            cls = self._cls,
+        )
 
 class AccessLog(ISendable):
 
@@ -106,8 +112,17 @@ class AccessLog(ISendable):
     def datetime(self) -> datetime:
         return self._datetime
     
-    def serialize(self, serializer: ISerializerVisitor) -> str|bytes:
-        return serializer.serialize_access_log(self)
+    def to_dict(self)->dict:
+        return dict(    
+            datetime = self._datetime.timestamp()*1000,
+            ip = self._ip,
+            user = self._user,
+            status_code = self._status_code,
+            dim = self._dim,
+            url = self._url,
+            user_agent = self._uagent,
+            method = self._method.name
+        )
 
 class Metrics(ISendable):
 
@@ -139,5 +154,11 @@ class Metrics(ISendable):
     def datetime(self) -> datetime:
         return self._datetime
     
-    def serialize(self, serializer: ISerializerVisitor) -> str|bytes:
-        return serializer.serialize_metrics(self)
+    def to_dict(self)->dict:
+        return dict(   
+            datetime = self._datetime.timestamp()*1000, 
+            cpu = self._cpu,
+            threads = self._threads,
+            users = self._users,
+            open_files = self._open_files,
+        )

@@ -1,0 +1,27 @@
+{
+    "name": "metrics",
+    "type": "record",
+    "fields" : [
+        {
+            "name": "cpu",
+            "type": "int"
+        },
+        {
+            "name": "threads",
+            "type": "int"
+        },
+        {
+            "name": "users",
+            "type": "int"
+        },
+        {
+            "name":"datetime",
+            "type": {"type": "long", "logicalType": "timestamp-millis"}
+        },
+        {
+            "name": "open_files",
+            "type": "int"
+        }
+
+    ]
+}

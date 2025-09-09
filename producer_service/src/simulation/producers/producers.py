@@ -4,10 +4,9 @@ from confluent_kafka import Producer as KProducer
 from confluent_kafka import Message
 from confluent_kafka import KafkaError
 
-from simulation.messages.factories import ISendableFactory
-from simulation.messages.serialization import ISerializerVisitor
+from simulation.messages.creation import ISendableFactory
+from simulation.producers.serialization import ISerializer
 
- 
 
 def delivery_report(err: KafkaError, msg: Message, results: "ProducerResults"):
     if err is not None:
@@ -18,19 +17,10 @@ def delivery_report(err: KafkaError, msg: Message, results: "ProducerResults"):
 
 class ProducerResults:
 
-    def __init__(self):
-        self._partition = None
+    def __init__(self, topic:str):
         self._n_sended = 0
         self._n_errors = 0
-        self._topic = None
-    
-    @property
-    def partition(self) -> int|None:
-        return self._partition
-    
-    @property
-    def topic(self) -> int|None:
-        return self._topic
+        self._topic = topic
 
     @property
     def n_sended(self) -> int:
@@ -39,32 +29,29 @@ class ProducerResults:
     @property
     def n_errors(self) -> int:
         return self._n_errors
-    
-    @partition.setter
-    def partition(self, partition: int) -> None:
-        if partition > 0:
-            self._partition = partition
+
+    @property
+    def topic(self) -> str:
+        return self._topic
+
 
     def add_sended(self) -> None:
         self._n_sended += 1
 
     def add_error(self) -> None:
         self._n_errors += 1
-    
-
-    
 
 
 class Producer():
 
-    def __init__(self, sendable_factory: ISendableFactory, k_producer: KProducer, topic: str, node_id: str, serializer: ISerializerVisitor):
+    def __init__(self, sendable_factory: ISendableFactory, k_producer: KProducer, topic: str, node_id: str, serializer: ISerializer):
 
         self._factory = sendable_factory
         self._k_producer = k_producer
         self._topic = topic
         self._node_id = node_id
         self._serializer = serializer
-        self._results = ProducerResults()
+        self._results = ProducerResults(topic=topic)
  
     @property
     def results(self) -> ProducerResults:
@@ -75,7 +62,7 @@ class Producer():
             self._k_producer.produce(
                 topic=self._topic, 
                 key=self._node_id,
-                value=self._factory.create().serialize(self._serializer),
+                value=self._serializer.serialize(self._factory.create(), self._topic),
                 on_delivery=partial(delivery_report, results=self._results)
             )
     
