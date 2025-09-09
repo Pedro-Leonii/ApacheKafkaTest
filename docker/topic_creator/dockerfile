@@ -1,0 +1,5 @@
+FROM apache/kafka:latest
+
+COPY ./topic-creation.sh .
+
+CMD ["sh", "topic-creation.sh"]
