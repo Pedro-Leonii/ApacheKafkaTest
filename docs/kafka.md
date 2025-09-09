@@ -4,7 +4,7 @@
 - Per semplicità di gestione ogni nodo del cluster assume ruolo di broker e di controller, l'appesantimento dei nodi è trascurabile.
 
 ## Organizzazione producer
-- I producer sono idem-potenti (ACKS=all e idempotence=True) perchè si vogliono poter eseguire algoritmi sul flusso di dati quindi è necessario avere delle certezze in termini di ordine di arrivo dei messaggi, singola ricezione dei messaggi e garanzia di arrivo.
+- I producer sono idem-potenti (acks=all e enable.idempotence=True) perchè si vogliono poter eseguire algoritmi sul flusso di dati quindi è necessario avere delle certezze in termini di ordine di arrivo dei messaggi, singola ricezione dei messaggi e garanzia di arrivo.
 
 
 ## Organizzazione topic 
