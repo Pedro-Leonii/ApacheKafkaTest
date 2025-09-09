@@ -1,9 +1,0 @@
-FROM python:latest
-
-WORKDIR /producer_service
-
-COPY . . 
-
-RUN pip install .
-
-CMD ["start-simulation"]
