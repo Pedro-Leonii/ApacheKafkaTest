@@ -86,7 +86,23 @@ services:
         condition: service_healthy
     networks:
       - global
+
+  s3proxy:
+    image: andrewgaul/s3proxy:latest
+    container_name: s3proxy
+    hostname: s3proxy
+    environment:
+      S3PROXY_ENDPOINT: http://0.0.0.0:8080
+      S3PROXY_AUTHORIZATION: none
+      JCLOUDS_PROVIDER: filesystem-nio2
+      JCLOUDS_FILESYSTEM_BASEDIR: /data
+    ports:
+      - 9000:8080
     volumes:
+      - ./s3-data:/data
+    networks:
+      - global
+
   schema-registry:
     image: confluentinc/cp-schema-registry:latest
     container_name: schemaregistry
@@ -111,7 +127,7 @@ services:
         condition: service_healthy
     networks:
       - global
-    
+
   producer:
     build: 
       dockerfile: docker/producer/dockerfile
@@ -130,12 +146,37 @@ services:
         condition: service_completed_successfully
     networks:
       - global
-    environment:
-      BOOTSTRAP_SERVERS: "broker1:9092,broker2:9092,broker3:9092"
-      ACKS: "all"
-    networks:
-      - cluster-net
 
-  s3-proxy:
+  worker1:
+    build: ./docker/worker/. 
+    image: worker
+    container_name: worker1
+    hostname: worker1
+    ports:
+      - 8083:8083
+    environment:
+      CONNECT_REST_ADVERTISED_HOST_NAME: worker1
+      CONNECT_REST_PORT: 8083
+      CONNECT_BOOTSTRAP_SERVERS: broker1:9092,broker2:9092,broker3:9092
+      CONNECT_GROUP_ID: s3-sink-cluster
+      CONNECT_CONFIG_STORAGE_TOPIC: _connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: _connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: _connect-status
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schemaregistry:8085
+      CONNECT_PLUGIN_PATH: usr/share/java,/usr/share/confluent-hub-components/
+    depends_on:
+      broker1:
+        condition: service_healthy
+      broker2:
+        condition: service_healthy  
+      broker3:
+        condition: service_healthy
+      s3proxy:
+        condition: service_started
+    networks:
+      - global
+
 
 
