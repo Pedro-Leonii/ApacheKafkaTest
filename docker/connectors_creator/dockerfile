@@ -1,0 +1,7 @@
+FROM alpine:latest
+
+RUN apk add --no-cache curl
+
+COPY ./s3-sink-connectors-creation.sh .
+
+CMD ["sh", "./s3-sink-connectors-creation.sh"]

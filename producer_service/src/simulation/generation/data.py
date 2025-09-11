@@ -97,3 +97,22 @@ USER_AGENTS: list[str] = [
     "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.120 Safari/537.36 Brave/128.0.6613.120",
     "Mozilla/5.0 (Macintosh; Intel Mac OS X 13_5) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/128.0.6613.120 Safari/537.36 Brave/128.0.6613.120"
 ]
+
+SEVERITY = [
+    "INFO",
+    "DEBUG",
+    "WARNING",
+    "ERROR"
+]
+
+METHODS = [
+    "GET",
+    "POST",
+    "PUT",
+    "DELETE",
+    "HEAD",
+    "CONNECT",
+    "OPTIONS",
+    "TRACE",
+    "PATCH"
+]

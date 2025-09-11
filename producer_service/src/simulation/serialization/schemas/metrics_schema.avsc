@@ -3,6 +3,10 @@
     "type": "record",
     "fields" : [
         {
+            "name": "source",
+            "type": "string"
+        },
+        {
             "name": "cpu",
             "type": "int"
         },
