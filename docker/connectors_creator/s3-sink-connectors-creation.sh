@@ -1,5 +1,5 @@
 curl -i -X PUT -H "Accept:application/json"\
-    -H "Content-Type:application/json" http://localhost:8083/connectors/sink-s3-access-log/config \
+    -H "Content-Type:application/json" http://worker1:8083/connectors/sink-s3-access-log/config \
     -d '
     {
         "connector.class": "io.confluent.connect.s3.S3SinkConnector",
@@ -12,8 +12,6 @@ curl -i -X PUT -H "Accept:application/json"\
         "rotate.interval.ms": "3600000",
         "flush.size": 1000,
 
-        "store.kafka.keys": "true",
-
         "auto.register.schemas": "false",
         "use.latest.version": "true",
 
@@ -41,7 +39,7 @@ curl -i -X PUT -H "Accept:application/json"\
 '
 
 curl -i -X PUT -H "Accept:application/json"\
-    -H "Content-Type:application/json" http://localhost:8083/connectors/sink-s3-app-log/config \
+    -H "Content-Type:application/json" http://worker1:8083/connectors/sink-s3-app-log/config \
     -d '
     {
         "connector.class": "io.confluent.connect.s3.S3SinkConnector",
@@ -54,8 +52,6 @@ curl -i -X PUT -H "Accept:application/json"\
         "rotate.interval.ms": "3600000",
         "flush.size": 1000,
 
-        "store.kafka.keys": "true",
-
         "auto.register.schemas": "false",
         "use.latest.version": "true",
 
@@ -83,7 +79,7 @@ curl -i -X PUT -H "Accept:application/json"\
 '
 
 curl -i -X PUT -H "Accept:application/json"\
-    -H "Content-Type:application/json" http://localhost:8083/connectors/sink-s3-metrics/config \
+    -H "Content-Type:application/json" http://worker1:8083/connectors/sink-s3-metrics/config \
     -d '
     {
         "connector.class": "io.confluent.connect.s3.S3SinkConnector",
@@ -95,8 +91,6 @@ curl -i -X PUT -H "Accept:application/json"\
         
         "rotate.interval.ms": "3600000",
         "flush.size": 1000,
-
-        "store.kafka.keys": "true",
 
         "auto.register.schemas": "false",
         "use.latest.version": "true",

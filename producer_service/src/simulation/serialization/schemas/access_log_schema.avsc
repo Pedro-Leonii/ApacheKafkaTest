@@ -3,6 +3,10 @@
     "type": "record",
     "fields": [
         {
+            "name": "source",
+            "type": "string"
+        },
+        {
             "name":"datetime",
             "type": {"type": "long", "logicalType": "timestamp-millis"}
         },
