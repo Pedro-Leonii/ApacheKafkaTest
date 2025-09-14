@@ -1,7 +1,6 @@
 from abc import ABC
-
-from dataclasses import dataclass
 from datetime import datetime 
+from dataclasses import dataclass
 
 @dataclass
 class BaseMessage(ABC):

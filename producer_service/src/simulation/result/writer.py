@@ -1,10 +1,10 @@
+import atexit
+import csv
 from threading import Lock
 from typing import Optional
-import atexit
 from pathlib import Path
-import csv
 
-from simulation.config.cfg import RESULTS_PATH, NODE_ID
+from simulation.config.cfg import RESULTS_PATH
 
 class ResultWriterSingleton:
 
@@ -22,7 +22,7 @@ class ResultWriterSingleton:
                 "n_byte_trasmessi"
             ]
             cls._instance._producer_result_file = open(
-                Path(RESULTS_PATH) / NODE_ID / "producer.csv", "a"
+                Path(RESULTS_PATH) / "producer.csv", "a"
             )
             cls._instance._producer_result_writer = csv.writer(
                 cls._instance._producer_result_file
@@ -47,7 +47,7 @@ class ResultWriterSingleton:
                 "throttle_std"
             ]
             cls._instance._brokers_result_file = open(
-                Path(RESULTS_PATH) / NODE_ID / "brokers.csv", "a"
+                Path(RESULTS_PATH) / "brokers.csv", "a"
             )
             cls._instance._brokers_result_writer = csv.writer(
                 cls._instance._brokers_result_file
@@ -64,7 +64,6 @@ class ResultWriterSingleton:
             brokers_res: list[list] = ResultWriterSingleton._extract_brokers_info(data)
             for r in brokers_res:
                 self._brokers_result_writer.writerow(r)
-
 
     def _extract_producer_info(data:dict) -> list:
         return [
@@ -96,14 +95,12 @@ class ResultWriterSingleton:
             ])
         return res
         
-
     def close(self) -> None:
         with ResultWriterSingleton._lock:
             if self._producer_result_file:
                 self._producer_result_file.close()
             if self._brokers_result_file:
                 self._brokers_result_file.close()
-
 
 writer: ResultWriterSingleton = ResultWriterSingleton()
 atexit.register(writer.close)

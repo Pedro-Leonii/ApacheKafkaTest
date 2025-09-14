@@ -1,5 +1,4 @@
 from abc import ABC, abstractmethod
-from dataclasses import asdict
 
 from confluent_kafka.schema_registry.avro import AvroSerializer as KAvroSerializer
 from confluent_kafka.serialization import SerializationContext
@@ -12,7 +11,6 @@ class ISerializer(ABC):
     @abstractmethod
     def serialize(self, message: BaseMessage, context: SerializationContext):
         ...
-
 
 class AvroSerializer(ISerializer):
 

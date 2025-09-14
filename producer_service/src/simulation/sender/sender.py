@@ -15,7 +15,6 @@ class Sender:
         self._k_producer = k_producer
         self._serializer = serializer
 
-
     def produce(self, n: int = 1) -> None:
 
         context: SerializationContext = SerializationContext(topic=self._topic, field=MessageField.VALUE) 

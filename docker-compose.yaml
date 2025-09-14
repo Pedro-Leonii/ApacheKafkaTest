@@ -144,7 +144,8 @@ services:
         condition: service_healthy
     environment:
       BOOTSTRAP_SERVERS: broker1:9092,broker2:9092,broker3:9092
-      NODE_ID: node1
+      RESULTS_PATH: producer-results
+      NODE_ID_LIST: node1,node2
       INTERVAL_METRICS: 1
       LAMBDA_LOGS: 100
     volumes:

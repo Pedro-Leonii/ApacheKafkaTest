@@ -19,7 +19,6 @@ class ISerializerFactory(ABC):
     def create_access_log_serializer(self) -> ISerializer:
         pass
 
-
 class AvroSerializerFactory(ISerializerFactory):
 
     def create_app_log_serializer(self) -> AvroSerializer:

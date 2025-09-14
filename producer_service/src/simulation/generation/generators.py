@@ -1,11 +1,9 @@
 import random 
 from datetime import datetime
-
 from abc import ABC, abstractmethod
 
 from simulation.core.messages import BaseMessage, ApplicationLogMessage, AccessLogMessage, ServerMetricsMessage
 import simulation.generation.data as data
-
 
 class MessageGenerationStrategy(ABC):
     
@@ -16,7 +14,6 @@ class MessageGenerationStrategy(ABC):
     @abstractmethod
     def generate(self, source:str) -> BaseMessage:
         ...
-
 
 class ApplicationLogRandomGeneration(MessageGenerationStrategy):
 
@@ -44,7 +41,6 @@ class AccessLogRandomGeneration(MessageGenerationStrategy):
             url=random.choice(data.URLS),
             user_agent=random.choice(data.USER_AGENTS)
         )
-
 
 class ServerMetricsRandomGeneration(MessageGenerationStrategy):
 
