@@ -1,4 +1,4 @@
 broker1
 broker2
 broker3
-s3-data
+**.env

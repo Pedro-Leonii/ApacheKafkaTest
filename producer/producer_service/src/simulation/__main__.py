@@ -30,9 +30,3 @@ def main():
     end_event.set()
     for runner in runners:
         runner.join()
- 
-
-
-
-
-

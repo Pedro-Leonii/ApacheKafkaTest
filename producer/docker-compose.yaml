@@ -1,0 +1,44 @@
+networks:
+  producer-net:
+    driver: bridge
+  
+services:
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:latest
+    container_name: schema-registry
+    hostname: schemaregistry
+    ports:
+      - 8085:8085
+    healthcheck:
+      start_period: 5s
+      interval: 10s
+      retries: 10
+      test: curl --fail --silent --insecure http://schemaregistry:8085/subjects --output /dev/null || exit 1
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: ${BOOTSTRAP_SERVERS}
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8085
+      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+    networks:
+      - producer-net
+
+  producer:
+    build: .
+    image: producer
+    container_name: producer
+    hostname: producer 
+    depends_on:
+      schema-registry:
+        condition: service_healthy
+    environment:
+      BOOTSTRAP_SERVERS: ${BOOTSTRAP_SERVERS}
+      RESULTS_PATH: ${RESULTS_PATH}
+      NODE_ID_LIST: node1,node2,node3,node4
+      INTERVAL_METRICS: 1
+      LAMBDA_LOGS: 100
+      SCHEMA_REGISTRY_URL: http://schemaregistry:8085
+    volumes:
+      - ./${RESULTS_PATH}:/results
+    networks:
+      - producer-net
+      - local-net 

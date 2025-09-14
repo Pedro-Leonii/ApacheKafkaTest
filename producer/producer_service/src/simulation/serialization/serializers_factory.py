@@ -2,10 +2,9 @@ from abc import ABC, abstractmethod
 from importlib.resources import files
 
 from simulation.serialization.serializers import ISerializer, AvroSerializer
+from simulation.config.cfg import SCHEMA_REGISTRY_URL
 
 class ISerializerFactory(ABC):
-
-    SCHEMA_REGISTRY_URL: str = "http://schemaregistry:8085"
 
     @abstractmethod
     def create_app_log_serializer(self) -> ISerializer:
@@ -25,7 +24,7 @@ class AvroSerializerFactory(ISerializerFactory):
         schema_str: str = files("simulation.serialization.schemas").joinpath("app_log_schema.avsc").read_text()
 
         return AvroSerializer(
-            schema_registry_url=ISerializerFactory.SCHEMA_REGISTRY_URL,
+            schema_registry_url=SCHEMA_REGISTRY_URL,
             schema_str=schema_str
         )
 
@@ -33,7 +32,7 @@ class AvroSerializerFactory(ISerializerFactory):
         schema_str: str = files("simulation.serialization.schemas").joinpath("metrics_schema.avsc").read_text()
 
         return AvroSerializer(
-            schema_registry_url=ISerializerFactory.SCHEMA_REGISTRY_URL,
+            schema_registry_url=SCHEMA_REGISTRY_URL,
             schema_str=schema_str
         )
     
@@ -41,6 +40,6 @@ class AvroSerializerFactory(ISerializerFactory):
         schema_str: str = files("simulation.serialization.schemas").joinpath("access_log_schema.avsc").read_text()
 
         return AvroSerializer(
-            schema_registry_url=ISerializerFactory.SCHEMA_REGISTRY_URL,
+            schema_registry_url=SCHEMA_REGISTRY_URL,
             schema_str=schema_str
         )

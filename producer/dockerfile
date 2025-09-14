@@ -2,7 +2,7 @@ FROM python:latest
 
 WORKDIR /producer_service
 
-COPY  producer_service .
+COPY  ./producer_service .
 
 RUN pip install .
 
