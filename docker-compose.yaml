@@ -142,6 +142,13 @@ services:
         condition: service_completed_successfully
       schema-registry:
         condition: service_healthy
+    environment:
+      BOOTSTRAP_SERVERS: broker1:9092,broker2:9092,broker3:9092
+      NODE_ID: node1
+      INTERVAL_METRICS: 1
+      LAMBDA_LOGS: 100
+    volumes:
+      - ./producer-results:/results
     networks:
       - global-net
 

@@ -5,11 +5,12 @@ from confluent_kafka import Producer
 from simulation.sender.sender import Sender
 from simulation.serialization.serializers_factory import ISerializerFactory
 from simulation.generation.generators import ServerMetricsRandomGeneration, ApplicationLogRandomGeneration, AccessLogRandomGeneration
+from simulation.config.cfg import BOOTSTRAP_SERVERS
 
 class SenderFactory:
 
     _PRODUCER: Producer = Producer({
-        "bootstrap.servers":"broker1:9092,broker2:9092,broker3:9092",
+        "bootstrap.servers": BOOTSTRAP_SERVERS,
         "acks":"all",
         "enable.idempotence": True,
         "linger.ms": 500,
@@ -18,7 +19,7 @@ class SenderFactory:
         "partitioner": "murmur2_random"
     })
 
-    def create_app_log_producer(source:str, serializer_factory: ISerializerFactory) -> Sender:
+    def create_app_log_sender(source:str, serializer_factory: ISerializerFactory) -> Sender:
         return Sender(
             msg_factory=ApplicationLogRandomGeneration(),
             k_producer=SenderFactory._PRODUCER,
@@ -27,7 +28,7 @@ class SenderFactory:
             topic="server.logs.application"
         )
     
-    def create_access_log_producer(source: str, serializer_factory: ISerializerFactory) -> Sender:
+    def create_access_log_sender(source: str, serializer_factory: ISerializerFactory) -> Sender:
         return Sender(
             msg_factory=AccessLogRandomGeneration(),
             k_producer=SenderFactory._PRODUCER,
@@ -36,7 +37,7 @@ class SenderFactory:
             topic="server.logs.access"
         )
     
-    def create_metrics_producer(source: str, serializer_factory: ISerializerFactory) -> Sender:
+    def create_metrics_sender(source: str, serializer_factory: ISerializerFactory) -> Sender:
         return Sender(
             msg_factory=ServerMetricsRandomGeneration(),
             k_producer=SenderFactory._PRODUCER,

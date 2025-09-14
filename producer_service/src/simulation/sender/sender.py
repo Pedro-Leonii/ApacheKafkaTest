@@ -1,10 +1,9 @@
-from confluent_kafka import Producer
+from confluent_kafka import Producer, Message, KafkaError
 from confluent_kafka.serialization import SerializationContext, MessageField
 
 from simulation.serialization.serializers import ISerializer
 from simulation.generation.generators import MessageGenerationStrategy
 from simulation.core.messages import BaseMessage
-
 
 class Sender:
 
@@ -31,5 +30,5 @@ class Sender:
                 value=self._serializer.serialize(message=msg.__dict__, context=context),
             )
     
-    def cleen_up(self):
+    def clean_up(self):
         self._k_producer.flush()
