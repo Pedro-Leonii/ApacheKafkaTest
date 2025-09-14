@@ -1,11 +1,15 @@
-from abc import ABC, abstractmethod
+import json
 
 from confluent_kafka import Producer
 
 from simulation.sender.sender import Sender
 from simulation.serialization.serializers_factory import ISerializerFactory
 from simulation.generation.generators import ServerMetricsRandomGeneration, ApplicationLogRandomGeneration, AccessLogRandomGeneration
+from simulation.result.writer import writer
 from simulation.config.cfg import BOOTSTRAP_SERVERS
+
+def stats_cb(stats: str):
+    writer.write(json.loads(stats))
 
 class SenderFactory:
 
@@ -16,7 +20,9 @@ class SenderFactory:
         "linger.ms": 500,
         "batch.size": 1048576,
         "compression.type": "lz4",
-        "partitioner": "murmur2_random"
+        "partitioner": "murmur2_random",
+        "stats_cb": stats_cb,
+        "statistics.interval.ms": 1000
     })
 
     def create_app_log_sender(source:str, serializer_factory: ISerializerFactory) -> Sender:
