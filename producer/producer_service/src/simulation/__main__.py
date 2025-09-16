@@ -1,32 +1,24 @@
-from threading import Thread, Event
+from functools import partial
+import signal
 
-from simulation.runner.runners import LogRunner, MetricsRunner
-from simulation.serialization.serializers_factory import AvroSerializerFactory
-from simulation.config.cfg import INTERVAL_METRICS, LAMBDA_LOGS, NODE_ID_LIST
+from simulation.node.node import NodeSimulation
+from simulation.config.cfg import NODES_NUM
+
+def stop_simulation(nodes: list[NodeSimulation], signum, frame):
+    print("Termino nodi...")
+    for node in nodes:
+        node.stop()
 
 def main():
 
-    end_event: Event = Event()
+    print(f"Inizio simulazione con {NODES_NUM} nodi...")
 
-    print(f"Inizio simulazione con {len(NODE_ID_LIST)} nodi...")
-    
+    nodes = [NodeSimulation() for _ in range(NODES_NUM)]
 
-    serializer_factory: AvroSerializerFactory = AvroSerializerFactory()
+    for node in nodes:
+        node.start()
 
-    runners: list[Thread] = []
-    for NODE_ID in NODE_ID_LIST:
-        runners.append(LogRunner(end_event, LAMBDA_LOGS, serializer_factory, NODE_ID))
-        runners.append(MetricsRunner(end_event, INTERVAL_METRICS, serializer_factory, NODE_ID))
+    signal.signal(signal.SIGTERM, partial(stop_simulation, nodes))
+    signal.signal(signal.SIGINT, partial(stop_simulation, nodes))
+    signal.stop()
 
-    for runner in runners:
-        runner.start()
-
-    inp: str = ""
-
-    while inp.strip().lower() != "q":
-        inp = input("Premere Q/q per terminare la simulazione:")
-    
-    print("Termino nodi...")
-    end_event.set()
-    for runner in runners:
-        runner.join()

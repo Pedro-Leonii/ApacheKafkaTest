@@ -28,6 +28,7 @@ class Sender:
                 key=self._source,
                 value=self._serializer.serialize(message=msg.__dict__, context=context),
             )
+            self._k_producer.poll(0)
     
     def clean_up(self):
         self._k_producer.flush()
