@@ -20,5 +20,5 @@ def main():
 
     signal.signal(signal.SIGTERM, partial(stop_simulation, nodes))
     signal.signal(signal.SIGINT, partial(stop_simulation, nodes))
-    signal.stop()
+    signal.pause()
 

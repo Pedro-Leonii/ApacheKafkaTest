@@ -3,7 +3,6 @@ import random
 from threading import Thread, Event
 
 import scipy.stats as sts
-
 from simulation.sender.sender import Sender
 
 class LogRunner(Thread):
@@ -22,9 +21,6 @@ class LogRunner(Thread):
             self._access_log_sender.produce()
             self._application_log_sender.produce(random.randint(1,3))
 
-        self._access_log_sender.clean_up()
-        self._application_log_sender.clean_up()
-
 
 
 class MetricsRunner(Thread):
@@ -39,5 +35,3 @@ class MetricsRunner(Thread):
         while not self._stop_event.is_set():
             time.sleep(self._t)
             self._metrics_producer.produce()
-
-        self._metrics_producer.clean_up()
