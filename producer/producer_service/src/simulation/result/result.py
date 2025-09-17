@@ -2,9 +2,8 @@ from threading import Lock
 
 class Results:
 
-    def __init__(self, producer_id: str):  
+    def __init__(self):  
         self._lock = Lock()
-        self._producer_id = producer_id
         self._sent = 0
         self._lost = 0
         self._bytes = 0
@@ -20,7 +19,6 @@ class Results:
     
     def __dict__(self):
         return {
-            "producer_id": self._producer_id,
             "sent": self._sent,
             "bytes": self._bytes,
             "lost": self._lost

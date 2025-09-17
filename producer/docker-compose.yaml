@@ -26,9 +26,8 @@ services:
     environment:
       BOOTSTRAP_SERVERS: ${BOOTSTRAP_SERVERS}
       RESULTS_CONTAINER_PATH: /results
-      NODES_NUM: 8
-      INTERVAL_METRICS: 1
-      LAMBDA_LOGS: 100
+      INTERVAL_METRICS: 0.1
+      LAMBDA_LOGS: 1000
       SCHEMA_REGISTRY_URL: http://schemaregistry:8085
     depends_on:
       schema-registry:
