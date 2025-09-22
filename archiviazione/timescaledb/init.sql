@@ -16,34 +16,57 @@ CREATE TABLE servers_access_logs(
     server_id varchar(255) NOT NULL,
     generation_time timestamp NOT NULL,
     user_ip cidr NOT NULL,
-    user_name varchar(255),
-    requested_url varchar(1000),
+    username varchar(255),
+    request_url varchar(1000),
     request_method http_method NOT NULL,
-    response_status http_status_code NOT NULL,
-    response_dimension unsigned_int NOT NULL,
-    user_agent varchar(300) NOT NULL
+    response_status_code http_status_code NOT NULL,
+    response_dim unsigned_int NOT NULL,
+    user_agent varchar(300) NOT NULL,
+    PRIMARY KEY (generation_time, server_id)
+)
+WITH(
+    tsdb.hypertable,
+    tsdb.partition_column='generation_time',
+    tsdb.chunk_interval='1d',
+    tsdb.segmentedby='server_id'
 );
+
+CALL add_columnstore_policy('server_application_logs', after => INTERVAL '1d');
 
 CREATE TABLE servers_application_logs(
     server_id varchar(255) NOT NULL,
     generation_time timestamp NOT NULL,
-    severity log_severity NOT NULL,
-    log_message varchar(500) NOT NULL,
-    thread varchar(100) NOT NULL,
-    class varchar(100) NOT NULL
+    severity severity NOT NULL,
+    msg varchar(500) NOT NULL,
+    source_thread varchar(100) NOT NULL,
+    source_class varchar(100) NOT NULL,
+    PRIMARY KEY (generation_time, server_id)
+
+)
+WITH(
+    tsdb.hypertable,
+    tsdb.partition_column='generation_time',
+    tsdb.chunk_interval='1d',
+    tsdb.segmentedby='server_id'
 );
+
+CALL add_columnstore_policy('server_application_logs', after => INTERVAL '1d');
 
 CREATE TABLE servers_metrics(
     server_id varchar(255) NOT NULL,
     generation_time timestamp NOT NULL,
     cpu_usage cpu_percentage NOT NULL,
-    active_threads unsigned_int NOT NULL,
-    active_users unsigned_int NOT NULL,
-    open_files unsigned_int NOT NULL
+    running_threads unsigned_int NOT NULL,
+    current_users unsigned_int NOT NULL,
+    open_files unsigned_int NOT NULL,
+    PRIMARY KEY (generation_time, server_id)
+)
+WITH(
+    tsdb.hypertable,
+    tsdb.partition_column='generation_time',
+    tsdb.chunk_interval='1d',
+    tsdb.segmentedby='server_id'
 );
 
-SELECT create_hypertable('servers_access_logs', by_range('generation_time'));
+CALL add_columnstore_policy('servers_metrics', after => INTERVAL '1d');
 
-SELECT create_hypertable('servers_application_logs', by_range('generation_time'));
-
-SELECT create_hypertable('servers_metrics', by_range('generation_time'));
