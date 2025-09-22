@@ -1,0 +1,23 @@
+services:
+  s3-worker:
+      build: . 
+      image: s3-worker
+      ports:
+        - 8083:8083
+      environment:
+        CONNECT_REST_ADVERTISED_HOST_NAME: ${HOST_ADDR}
+        CONNECT_REST_PORT: 8083
+        CONNECT_BOOTSTRAP_SERVERS: ${BOOTSTRAP_SERVERS}
+        CONNECT_GROUP_ID: s3-sink-cluster
+        CONNECT_CONFIG_STORAGE_TOPIC: _s3-connect-configs
+        CONNECT_OFFSET_STORAGE_TOPIC: _s3-connect-offsets
+        CONNECT_STATUS_STORAGE_TOPIC: _s3-connect-status
+        CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+        CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+        CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: ${SCHEMA_REGISTRY_URL}
+        CONNECT_PLUGIN_PATH: usr/share/java,/usr/share/confluent-hub-components/
+        CONNECT_FETCH_MIN_BYTES: 1048576
+        CONNECT_FETCH_MAX_WAIT_MS: 500
+        CONNECT_ERRORS_TOLLERANCE: all
+        CONNECT_ERRORS_LOG_ENABLE: true
+        CONNECT_ERRORS_DEADLETTERQUEUE_TOPIC_NAME: dlq-s3-topic
