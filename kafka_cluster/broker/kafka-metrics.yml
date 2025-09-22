@@ -58,24 +58,3 @@ rules:
     type: GAUGE
     labels:
       listener: "$1"
-
-# lowercaseOutputName: true
-
-# rules:
-#   - pattern: ".*"
-#     name: "jmx_bean"
-#     type: GAUGE
-#     labels:
-#       bean: "$0"
-
-#   - pattern: "(.*)<.*><>Value"
-#     name: "jmx_value_$1"
-#     type: GAUGE
-#     labels:
-#       bean: "$1"
-
-#   - pattern: "(.*)<.*><>Count"
-#     name: "jmx_counter_$1"
-#     type: COUNTER
-#     labels:
-#       bean: "$1"
