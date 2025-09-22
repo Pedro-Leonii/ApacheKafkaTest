@@ -6,50 +6,45 @@ from simulation.core.messages import BaseMessage, ApplicationLogMessage, AccessL
 import simulation.generation.data as data
 
 class MessageGenerationStrategy(ABC):
-    
-    @property
-    def source(self) -> str:
-        return self._source
-
     @abstractmethod
-    def generate(self, source:str) -> BaseMessage:
+    def generate(self, server_id:str) -> BaseMessage:
         ...
 
 class ApplicationLogRandomGeneration(MessageGenerationStrategy):
 
-    def generate(self, source: str) -> ApplicationLogMessage:
+    def generate(self, server_id: str) -> ApplicationLogMessage:
         return ApplicationLogMessage(
-            source=source,
-            datetime=datetime.now(),
+            server_id=server_id,
+            generation_time=datetime.now(),
             severity=random.choice(data.SEVERITY),
             msg=random.choice(data.MSGS),
-            thread=random.choice(data.THREADS),
-            cls=random.choice(data.CLSES)
+            source_thread=random.choice(data.THREADS),
+            source_cls=random.choice(data.CLSES)
         )
 
 class AccessLogRandomGeneration(MessageGenerationStrategy):
 
-    def generate(self, source: str) -> AccessLogMessage:
+    def generate(self, server_id: str) -> AccessLogMessage:
         return AccessLogMessage(
-            source=source,
-            datetime=datetime.now(),
-            method=random.choice(data.METHODS),
-            ip=f"192.68.{random.randint(0,255)}.{random.randint(1,254)}",
-            user=random.choice(data.USERS),
-            status_code=random.choice(data.STATUS_CODES),
-            dim=random.randint(500, 500_000),
-            url=random.choice(data.URLS),
+            server_id=server_id,
+            generation_time=datetime.now(),
+            request_method=random.choice(data.METHODS),
+            user_ip=f"192.68.{random.randint(0,255)}.{random.randint(1,254)}",
+            username=random.choice(data.USERS),
+            response_status_code=random.choice(data.STATUS_CODES),
+            response_dim=random.randint(500, 500_000),
+            request_url=random.choice(data.URLS),
             user_agent=random.choice(data.USER_AGENTS)
         )
 
 class ServerMetricsRandomGeneration(MessageGenerationStrategy):
 
-    def generate(self, source: str) -> ServerMetricsMessage:
+    def generate(self, server_id: str) -> ServerMetricsMessage:
         return ServerMetricsMessage(
-            source=source,
-            datetime=datetime.now(),
-            cpu=random.randint(30, 95),
-            threads=random.randint(1, 30),
-            users=random.randint(0,1500),
+            server_id=server_id,
+            generation_time=datetime.now(),
+            cpu_usage=random.randint(30, 95),
+            running_threads=random.randint(1, 30),
+            current_users=random.randint(0,1500),
             open_files=random.randint(0,10)
         )

@@ -5,29 +5,29 @@ from dataclasses import dataclass
 @dataclass
 class BaseMessage(ABC):
 
-    source: str
-    datetime: datetime
+    server_id: str
+    generation_time: datetime
 
 @dataclass
 class ApplicationLogMessage(BaseMessage):
     severity: str
     msg: str
-    thread: str
-    cls: str
+    source_thread: str
+    source_cls: str
 
 @dataclass
 class AccessLogMessage(BaseMessage):
-    method: str
-    ip: str
-    user: str|None
-    status_code: int
-    url: str
-    dim: int
+    request_method: str
+    user_ip: str
+    username: str|None
+    response_status_code: int
+    request_url: str
+    response_dim: int
     user_agent: str
 
 @dataclass
 class ServerMetricsMessage(BaseMessage):
-    cpu: int
-    threads: int
-    users: int
+    cpu_usage: int
+    running_threads: int
+    current_users: int
     open_files: int

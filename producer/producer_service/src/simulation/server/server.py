@@ -7,11 +7,9 @@ from confluent_kafka import Producer
 from simulation.runner.runners import MetricsRunner, LogRunner
 from simulation.serialization.serializers_factory import AvroSerializerFactory
 from simulation.sender.senders_factory import SenderFactory
-from simulation.result.result import Results
-from simulation.result.writer import ResultWriterJSON
 from simulation.config.cfg import INTERVAL_METRICS, BOOTSTRAP_SERVERS, LAMBDA_LOGS
 
-class NodeSimulation:
+class ServerSimulation:
 
     COMMON_CONFIG: dict = {
         "bootstrap.servers": BOOTSTRAP_SERVERS,
@@ -23,29 +21,27 @@ class NodeSimulation:
         "partitioner": "murmur2_random"
     }
 
-    def generate_node_id() -> str:
+    def generate_server_id() -> str:
         return f"node-{uuid.uuid4()}"
 
     def __init__(self):
         
-        self._node_id = NodeSimulation.generate_node_id()
-        self._results = Results()
+        self._server_id = ServerSimulation.generate_server_id()
 
         self._stop_event = Event()
         self._kafka_producer = Producer({
-            **NodeSimulation.COMMON_CONFIG,
-            "client.id": self._node_id
+            **ServerSimulation.COMMON_CONFIG,
+            "client.id": self._server_id
         }) 
         
         avro_serializer_factory = AvroSerializerFactory()
 
         metrics_sender=SenderFactory.create_metrics_sender(
-            source=self._node_id,
+            server_id=self._server_id,
             serializer_factory=avro_serializer_factory,
-            kafka_producer=self._kafka_producer,
-            results=self._results
-
+            kafka_producer=self._kafka_producer
         )
+        
         self._metrics_runner = MetricsRunner(
             stop_event=self._stop_event,
             t=INTERVAL_METRICS,
@@ -54,17 +50,14 @@ class NodeSimulation:
         )
 
         access_log_sender=SenderFactory.create_access_log_sender(
-            source=self._node_id,
+            server_id=self._server_id,
             serializer_factory=avro_serializer_factory,
-            kafka_producer=self._kafka_producer,
-            results=self._results
-
+            kafka_producer=self._kafka_producer
         )
         application_log_sender=SenderFactory.create_app_log_sender(
-            source=self._node_id,
+            server_id=self._server_id,
             serializer_factory=avro_serializer_factory,
-            kafka_producer=self._kafka_producer,
-            results=self._results
+            kafka_producer=self._kafka_producer
         )
         self._log_runner = LogRunner(
             stop_event=self._stop_event,
@@ -82,4 +75,3 @@ class NodeSimulation:
         self._log_runner.join()
         self._metrics_runner.join()
         self._kafka_producer.flush()
-        ResultWriterJSON.write(self._results, self._node_id)

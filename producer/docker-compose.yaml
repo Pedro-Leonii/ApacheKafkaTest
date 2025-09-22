@@ -15,8 +15,8 @@ services:
       test: curl --fail --silent --insecure http://schemaregistry:8085/subjects --output /dev/null || exit 1
     environment:
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: PLAINTEXT://${BOOTSTRAP_SERVERS}
-      SCHEMA_REGISTRY_LISTENERS: http://schemaregistry:8085
-      SCHEMA_REGISTRY_HOST_NAME: schemaregistry
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:8085
+      SCHEMA_REGISTRY_HOST_NAME: ${REGISTRY_CONSUMER_ID}
     networks:
       - producer-net
 
@@ -33,6 +33,8 @@ services:
       schema-registry:
         condition: service_healthy
     volumes:
-      - ./test/results:/results
+      - ./test2/results:/results
     networks:
       - producer-net
+
+  

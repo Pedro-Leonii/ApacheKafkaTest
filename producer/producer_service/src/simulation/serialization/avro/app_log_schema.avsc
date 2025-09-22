@@ -3,23 +3,27 @@
     "type": "record",
     "fields": [
         {
-            "name": "source",
+            "name": "server_id",
             "type": "string"
         },
         {
-            "name":"datetime",
+            "name":"generation_time",
             "type": {"type": "long", "logicalType": "timestamp-millis"}
+        },
+        {
+            "name": "msg",
+            "type": "string" 
         },
         {
             "name": "severity",
             "type": "string"
         },
         {
-            "name": "thread",
+            "name": "source_thread",
             "type": "string"
         },
         {
-            "name": "cls",
+            "name": "source_cls",
             "type": "string"
         }
     ]

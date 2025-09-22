@@ -1,0 +1,11 @@
+services:
+  producer:
+    build: .
+    image: producer
+    container_name: producer
+    environment:
+      BOOTSTRAP_SERVERS: ${BOOTSTRAP_SERVERS}
+      INTERVAL_METRICS: 0.1
+      LAMBDA_LOGS: 1000
+      SCHEMA_REGISTRY_URL: ${SCHEMA_REGISTRY_URL}
+  

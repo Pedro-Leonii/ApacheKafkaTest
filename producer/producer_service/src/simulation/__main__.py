@@ -1,9 +1,9 @@
 from functools import partial
 import signal
 
-from simulation.node.node import NodeSimulation
+from simulation.server.server import ServerSimulation
 
-def stop_simulation(node: NodeSimulation, signum, frame):
+def stop_simulation(node: ServerSimulation, signum, frame):
     print("Termino simulazione del nodo...")
     node.stop()
 
@@ -11,7 +11,7 @@ def main():
 
     print("Inizio simulazione del nodo...")
 
-    node: NodeSimulation = NodeSimulation()
+    node: ServerSimulation = ServerSimulation()
     node.start()
 
     signal.signal(signal.SIGTERM, partial(stop_simulation, node))

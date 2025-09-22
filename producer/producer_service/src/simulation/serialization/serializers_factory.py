@@ -21,7 +21,7 @@ class ISerializerFactory(ABC):
 class AvroSerializerFactory(ISerializerFactory):
 
     def create_app_log_serializer(self) -> AvroSerializer:
-        schema_str: str = files("simulation.serialization.schemas").joinpath("app_log_schema.avsc").read_text()
+        schema_str: str = files("simulation.serialization.avro").joinpath("app_log_schema.avsc").read_text()
 
         return AvroSerializer(
             schema_registry_url=SCHEMA_REGISTRY_URL,
@@ -29,7 +29,7 @@ class AvroSerializerFactory(ISerializerFactory):
         )
 
     def create_metrics_serializer(self) -> AvroSerializer:
-        schema_str: str = files("simulation.serialization.schemas").joinpath("metrics_schema.avsc").read_text()
+        schema_str: str = files("simulation.serialization.avro").joinpath("metrics_schema.avsc").read_text()
 
         return AvroSerializer(
             schema_registry_url=SCHEMA_REGISTRY_URL,
@@ -37,7 +37,7 @@ class AvroSerializerFactory(ISerializerFactory):
         )
     
     def create_access_log_serializer(self) -> AvroSerializer:
-        schema_str: str = files("simulation.serialization.schemas").joinpath("access_log_schema.avsc").read_text()
+        schema_str: str = files("simulation.serialization.avro").joinpath("access_log_schema.avsc").read_text()
 
         return AvroSerializer(
             schema_registry_url=SCHEMA_REGISTRY_URL,

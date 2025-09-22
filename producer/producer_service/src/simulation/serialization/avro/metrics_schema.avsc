@@ -3,25 +3,26 @@
     "type": "record",
     "fields" : [
         {
-            "name": "source",
+            "name": "server_id",
             "type": "string"
         },
         {
-            "name": "cpu",
-            "type": "int"
-        },
-        {
-            "name": "threads",
-            "type": "int"
-        },
-        {
-            "name": "users",
-            "type": "int"
-        },
-        {
-            "name":"datetime",
+            "name":"generation_time",
             "type": {"type": "long", "logicalType": "timestamp-millis"}
         },
+        {
+            "name": "cpu_usage",
+            "type": "int"
+        },
+        {
+            "name": "running_threads",
+            "type": "int"
+        },
+        {
+            "name": "current_users",
+            "type": "int"
+        },
+     
         {
             "name": "open_files",
             "type": "int"

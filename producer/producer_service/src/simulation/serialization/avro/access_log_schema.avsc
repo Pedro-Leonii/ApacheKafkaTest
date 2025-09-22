@@ -3,39 +3,39 @@
     "type": "record",
     "fields": [
         {
-            "name": "source",
+            "name": "server_id",
             "type": "string"
         },
         {
-            "name":"datetime",
+            "name":"generation_time",
             "type": {"type": "long", "logicalType": "timestamp-millis"}
         },
         {
-            "name": "ip",
+            "name": "request_method",
             "type": "string"
         },
         {
-            "name": "user",
+            "name": "user_ip",
+            "type": "string"
+        },
+        {
+            "name": "username",
             "type": ["string", "null"]
         },
         {
-            "name": "status_code",
+            "name": "response_status_code",
             "type": "int"
         },
         {
-            "name": "dim",
-            "type": "int"
-        },
-        {
-            "name": "url",
+            "name": "request_url",
             "type": "string"
+        },
+        {
+            "name": "response_dim",
+            "type": "int"
         },
         {
             "name": "user_agent",
-            "type": "string"
-        },
-        {
-            "name": "method",
             "type": "string"
         }
     ]
