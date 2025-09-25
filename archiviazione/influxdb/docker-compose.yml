@@ -1,0 +1,15 @@
+services:
+  influxdb3-core:
+    container_name: influxdb3-core
+    image: influxdb:3-core
+    ports:
+      - 8181:8181
+    environment:
+      INFLUXDB3_NODE_IDENTIFIER_PREFIX: node
+      INFLUXDB3_OBJECT_STORE:  file
+      INFLUXDB3_START_WITHOUT_AUTH: true
+      INFLUXDB3_HTTP_BIND_ADDR: 0.0.0.0:8181
+      INFLUXDB3_DB_DIR: /tmp/influxdb3
+    command:
+      - influxdb3
+      - serve
