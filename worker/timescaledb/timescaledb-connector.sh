@@ -1,5 +1,5 @@
 worker_addr=$1
-connection_password=$3
+connection_password=$2
 connection_url="jdbc:postgresql://timescaledb:8888/kafka"
 connection_user="postgres"
 

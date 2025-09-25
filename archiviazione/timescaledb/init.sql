@@ -2,7 +2,7 @@ CREATE DATABASE kafka;
 
 \c kafka
 
-CREATE DOMAIN unsigned_int AS integer CHECK (VALUE > 0);
+CREATE DOMAIN unsigned_int AS integer CHECK (VALUE >= 0);
 
 CREATE DOMAIN cpu_percentage AS int CHECK (VALUE > 0 AND VALUE < 100);
 
@@ -31,9 +31,9 @@ CREATE TABLE servers_logs_application(
     server_id varchar(255) NOT NULL,
     generation_time timestamp NOT NULL,
     severity varchar(10) NOT NULL,
-    msg varchar(500) NOT NULL,
+    msg TEXT NOT NULL,
     source_thread varchar(100) NOT NULL,
-    source_class varchar(100) NOT NULL,
+    source_cls varchar(100) NOT NULL,
     PRIMARY KEY (generation_time, server_id)
 
 )
