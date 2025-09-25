@@ -1,0 +1,18 @@
+name: worker-influxdb 
+
+services:
+  telegraf:
+    image: telegraf
+    container_name: telegraf
+    extra_hosts:
+        - "broker1=${CLUSTER}"
+        - "broker2=${CLUSTER}"
+        - "broker3=${CLUSTER}"
+        - "schema_registry=${SCHEMA_REGISTRY}"
+        - "influx=${INFLUX}"
+    environment:
+      INFLUX_URL: http://influx:8181
+      BOOTSTRAP_SERVER: broker1:9092, broker2:9093, broker3:9094
+      SCHEMA_REGISTRY_URL: http://schema_registry:9095
+    volumes:
+      - ./telegraf.conf:/etc/telegraf/telegraf.conf
