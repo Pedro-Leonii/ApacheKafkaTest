@@ -62,6 +62,19 @@ services:
       - 9094:9092
     networks:
       - cluster-net
+  
+  topics-creator:
+    image: apache/kafka
+    container_name: topic-creator
+    volumes:
+      - ./topic-creation.sh:/opt/kafka/setup/topic-creation.sh
+    depends_on:
+      - broker1
+      - broker2
+      - broker3
+    entrypoint:
+      - /bin/sh 
+      - /opt/kafka/setup/topic-creation.sh
 
   prometheus:
     build: 

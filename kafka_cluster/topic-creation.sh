@@ -1,20 +1,20 @@
 #!/bin/bash
 
-TOPICS=(servers.metrics servers.logs.application servers.logs.access)
-SERVERS=$1
-INSYNC=2
-REPLICATION=3
-PARTITION=12
+servers="broker1:9092, broker2:9093, broker3:9094"
+insync=2
+replication=3
+partition_n=12
+topics=(servers.metrics servers.logs.application servers.logs.access)
 
 
-for TOPIC in ${TOPICS[@]}; do
+for topic in ${topics[@]}; do
         kafka-topics.sh --create \
-        --topic $TOPIC \
+        --topic $topic \
         --if-not-exists \
-        --partitions $PARTITION \
-        --replication-factor $REPLICATION \
-        --config min.insync.replicas=$INSYNC \
-        --bootstrap-server $SERVERS
+        --partitions $partition_n \
+        --replication-factor $replication \
+        --config min.insync.replicas=$insync \
+        --bootstrap-server $servers
 done
 
 
@@ -22,7 +22,7 @@ kafka-topics.sh --create \
         --topic _schemas \
         --if-not-exists \
         --partitions 1 \
-        --replication-factor $REPLICATION \
-        --config min.insync.replicas=$INSYNC \
+        --replication-factor $replication \
+        --config min.insync.replicas=$insync \
         --config cleanup.policy=compact \
-        --bootstrap-server $SERVERS
+        --bootstrap-server $servers
