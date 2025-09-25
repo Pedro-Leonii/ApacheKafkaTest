@@ -22,7 +22,7 @@ for topic in ${topics[@]}; do
     "auto.register.schemas": false,
     "use.latest.version": true,
 
-    "store.url": "http://$s3_host:9095",
+    "store.url": "http://$s3_host:9000",
     "s3.bucket.name": "testbucket",
     "storage.class": "io.confluent.connect.s3.storage.S3Storage",
     "aws.access.key.id": "none",
