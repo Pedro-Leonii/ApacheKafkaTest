@@ -10,7 +10,6 @@ x-broker-common-env: &common-env
   KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
   CLUSTER_ID: 8cQAdE44QTWV_0HLozHOOQ 
   KAFKA_LOG_DIRS: /opt/kafka/data
-  KAFKA_BROKER_RACK: 1
 
 services:
   broker1:
@@ -24,12 +23,9 @@ services:
       KAFKA_NODE_ID: 1
       KAFKA_BROKER_ID: 1
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://broker1:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOST_ADDR}:9092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker1:9092
     ports:
       - 9092:9092
-      - 9098:9098
-    volumes:
-      - ./topic-creation.sh:/opt/kafka/setup/topic-creation.sh
     networks:
       - cluster-net
 
@@ -44,11 +40,9 @@ services:
       KAFKA_NODE_ID: 2
       KAFKA_BROKER_ID: 2
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://broker2:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOST_ADDR}:9093
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker2:9093
     ports:
       - 9093:9092
-      - 9099:9098
-
     networks:
       - cluster-net
 
@@ -63,10 +57,9 @@ services:
       KAFKA_NODE_ID: 3
       KAFKA_BROKER_ID: 3
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://broker3:9093
-      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOST_ADDR}:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker3:9094
     ports:
       - 9094:9092
-      - 9100:9098
     networks:
       - cluster-net
 
@@ -77,5 +70,11 @@ services:
     container_name: prometheus
     ports:
       - 9999:9090
+    depends_on:
+      - broker1
+      - broker2
+      - broker3
     networks:
       - cluster-net
+    volumes:
+      - prometheus_data:/prometheus

@@ -4,18 +4,18 @@ global:
   scrape_timeout: 1s
 
 scrape_configs:
-  - job_name: 'kafka'
+  - job_name: kafka
     static_configs:
       - targets:
-          - 'broker1:9098' 
-          - 'broker2:9098'
-          - 'broker3:9098'
+          - "broker1:9098" 
+          - "broker2:9098"
+          - "broker3:9098"
     relabel_configs:
       - source_labels: [__name__]
-        regex: '^.*$'
+        regex: "^.*$"
         action: keep
 
-  - job_name: 'prometheus'
+  - job_name: prometheus
     static_configs:
       - targets:
-          - 'localhost:9090'
+          - "localhost:9090"
