@@ -1,34 +1,52 @@
 rules:
+
+  # METRICHE PRODUCER
+  - pattern: kafka_server<type=BrokerTopicMetrics, name=FailedProduceRequestsPerSec><> Count
+    name: kafka_total_produce_falied
+    type: COUNTER
+
   - pattern: kafka.server<type=BrokerTopicMetrics, name=MessagesInPerSec, topic=(.+)><>Count
-    name: kafka_total_msgs_in
+    name: kafka_total_msgs_produced
     type: COUNTER
     labels:
       topic: "$1"
     
   - pattern: kafka.server<type=BrokerTopicMetrics, name=MessagesInPerSec, topic=(.+)><>MeanRate
-    name: kafka_mean_msgs_in_per_s
+    name: kafka_mean_msgs_produced_per_s
     type: GAUGE
     labels:
       topic: "$1"
 
   - pattern: kafka.server<type=BrokerTopicMetrics, name=BytesInPerSec, topic=(.+)><>Count
-    name: kafka_total_bytes_in
+    name: kafka_total_bytes_produced
     type: COUNTER
     labels:
       topic: "$1"
 
   - pattern: kafka.server<type=BrokerTopicMetrics, name=BytesInPerSec, topic=(.+)><>MeanRate
-    name: kafka_mean_bytes_in_per_s
+    name: kafka_mean_bytes_produced_per_s
     type: GAUGE
     labels:
       topic: "$1"
   
-  - pattern: kafka.server<type=BrokerTopicMetrics, name=FailedProduceRequestsPerSec, topic=(.+)><>Count
-    name: kafka_total_failed_produce
+  # METRICHE CONSUMER
+  - pattern: kafka_server<type=BrokerTopicMetrics, name=BytesOutPerSec, topic=(.+)><>Count
+    name: kafka_total_bytes_consumed
     type: COUNTER
     labels:
       topic: "$1"
 
+  - pattern: kafka.server<type=BrokerTopicMetrics, name=BytesOutPerSec, topic=(.+)><>MeanRate
+    name: kafka_mean_bytes_consumed_per_s
+    type: GAUGE
+    labels:
+      topic: "$1"
+  
+  - pattern: kafka_server<type=BrokerTopicMetrics, name=FailedFetchRequestsPerSec><> Count
+    name: kafka_consume_falied
+    type: COUNTER
+  
+  # METRICHE REPLICAZIONE
   - pattern: kafka.server<type=BrokerTopicMetrics, name=ReplicationBytesInPerSec, topic=(.+)><>Count
     name: kafka_total_replication_bytes_in
     type: COUNTER
@@ -41,10 +59,16 @@ rules:
     labels:
       topic: "$1"
 
-  - pattern: kafka.server<ttype=DelayedOperationPurgatory, name=PurgatorySize, delayedOperation=Produce><>Value
+  # METRICHE ACK PRODUZIONE E BATCHING CONSUMAZIONE
+  - pattern: kafka.server<type=DelayedOperationPurgatory, name=PurgatorySize, delayedOperation=Produce><>Value
     name: kafka_produce_purgatory_size
     type: GAUGE
 
+  - pattern: kafka.server<type=DelayedOperationPurgatory, name=PurgatorySize, delayedOperation=Fetch><>Value
+    name: kafka_consume_purgatory_size
+    type: GAUGE
+
+  # METRICHE RISORSE CLUSTER
   - pattern: kafka.server<type=KafkaServer, name=linux-disk-read-bytes><>Value
     name: kafka_bytes_disk_read
     type: GAUGE
