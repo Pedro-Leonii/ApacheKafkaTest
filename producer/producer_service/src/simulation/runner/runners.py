@@ -11,7 +11,6 @@ class LogRunner(Thread):
         super().__init__()
         self._distr = sts.expon(scale=1/l)
         self._stop_event: Event = stop_event
-
         self._access_log_sender: Sender = access_log_sender
         self._application_log_sender: Sender = application_log_sender
 

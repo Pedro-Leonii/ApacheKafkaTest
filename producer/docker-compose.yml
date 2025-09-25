@@ -3,9 +3,14 @@ services:
     build: .
     image: producer
     container_name: producer
+    extra_hosts:
+      - "broker1=${CLUSTER}"
+      - "broker2=${CLUSTER}"
+      - "broker3=${CLUSTER}"
+      - "schema_registry=${SCHEMA_REGISTRY}"
     environment:
-      BOOTSTRAP_SERVERS: ${BOOTSTRAP_SERVERS}
+      BOOTSTRAP_SERVERS: broker1:9092, broker2:9092, broker3:9092
       INTERVAL_METRICS: 0.1
       LAMBDA_LOGS: 1000
-      SCHEMA_REGISTRY_URL: ${SCHEMA_REGISTRY_URL}
+      SCHEMA_REGISTRY_URL: http://schema_registry:9095
   
