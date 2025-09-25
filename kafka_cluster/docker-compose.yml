@@ -4,7 +4,7 @@ networks:
 
 x-broker-common-env: &common-env
   KAFKA_PROCESS_ROLES: broker,controller
-  KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker1:9093,2@broker2:9093,3@broker3:9093
+  KAFKA_CONTROLLER_QUORUM_VOTERS: 1@broker1:9095,2@broker2:9095,3@broker3:9095
   KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
   KAFKA_CONTROLLER_LISTENER_NAMES: CONTROLLER
   KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
@@ -22,7 +22,7 @@ services:
       <<: *common-env
       KAFKA_NODE_ID: 1
       KAFKA_BROKER_ID: 1
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://broker1:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://broker1:9095
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker1:9092
     ports:
       - 9092:9092
@@ -39,10 +39,10 @@ services:
       <<: *common-env
       KAFKA_NODE_ID: 2
       KAFKA_BROKER_ID: 2
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://broker2:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093,CONTROLLER://broker2:9095
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker2:9093
     ports:
-      - 9093:9092
+      - 9093:9093
     networks:
       - cluster-net
 
@@ -56,10 +56,10 @@ services:
       <<: *common-env
       KAFKA_NODE_ID: 3
       KAFKA_BROKER_ID: 3
-      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://broker3:9093
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9094,CONTROLLER://broker3:9095
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker3:9094
     ports:
-      - 9094:9092
+      - 9094:9094
     networks:
       - cluster-net
   
@@ -73,13 +73,16 @@ services:
       - broker2
       - broker3
     entrypoint:
-      - /bin/sh 
+      - /bin/bash 
       - /opt/kafka/setup/topic-creation.sh
+    networks:
+      - cluster-net
 
   prometheus:
     build: 
       context: ./prometheus
     image: kafka-prometheus
+    user: root
     container_name: prometheus
     ports:
       - 9999:9090
@@ -90,4 +93,4 @@ services:
     networks:
       - cluster-net
     volumes:
-      - prometheus_data:/prometheus
+      - ./prometheus_data:/prometheus
