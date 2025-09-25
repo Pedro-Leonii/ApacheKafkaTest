@@ -1,0 +1,32 @@
+name: worker-timescaledb 
+
+services:
+  timescaledb-worker:
+      build: .
+      image: timescaledb-worker
+      ports:
+        - 8083:8083
+      extra_hosts:
+        - "broker1=${CLUSTER}"
+        - "broker2=${CLUSTER}"
+        - "broker3=${CLUSTER}"
+        - "schema_registry=${SCHEMA_REGISTRY}"
+        - "timescaledb=${TIMESCALEDB}"
+      environment:
+        CONNECT_REST_ADVERTISED_HOST_NAME: ${HOST}
+        CONNECT_REST_PORT: 8083
+        CONNECT_BOOTSTRAP_SERVERS: broker1:9092, broker2:9093, broker3:9094
+        CONNECT_GROUP_ID: timescaledb-sink-cluster
+        CONNECT_CONFIG_STORAGE_TOPIC: _timescaledb-connect-configs
+        CONNECT_OFFSET_STORAGE_TOPIC: _timescaledb-connect-offsets
+        CONNECT_STATUS_STORAGE_TOPIC: _timescaledb-connect-status
+        CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+        CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+        CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema_registry:9096
+        CONNECT_PLUGIN_PATH: usr/share/java,/usr/share/confluent-hub-components/
+        CONNECT_FETCH_MIN_BYTES: 1048576
+        CONNECT_FETCH_MAX_WAIT_MS: 500
+        CONNECT_ERRORS_TOLLERANCE: all
+        CONNECT_ERRORS_LOG_ENABLE: true
+        CONNECT_ERRORS_DEADLETTERQUEUE_TOPIC_NAME: dlq.timescaledb.topic
+        CONNECT_CONSUMER_PARTITION_ASSIGNMENT_STRATEGY: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
