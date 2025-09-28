@@ -1,20 +1,24 @@
 from functools import partial
 import signal
 
-from simulation.server.server import ServerSimulation
+from simulation.runner.logic import LoggerSimulationLogic, SystemMonitorSimulationLogic
+from simulation.runner.server import ServerSimulation
 
-def stop_simulation(node: ServerSimulation, signum, frame):
-    print("Termino simulazione del nodo...")
-    node.stop()
+def stop_simulation(server: ServerSimulation, signum, frame):
+    print("Termino simulazione del server...")
+    server.stop()
 
 def main():
 
-    print("Inizio simulazione del nodo...")
+    print("Inizio simulazione del server...")
 
-    node: ServerSimulation = ServerSimulation()
-    node.start()
+    server: ServerSimulation = ServerSimulation([
+        LoggerSimulationLogic(),
+        SystemMonitorSimulationLogic()
+    ])
+    server.start()
 
-    signal.signal(signal.SIGTERM, partial(stop_simulation, node))
-    signal.signal(signal.SIGINT, partial(stop_simulation, node))
+    signal.signal(signal.SIGTERM, partial(stop_simulation, server))
+    signal.signal(signal.SIGINT, partial(stop_simulation, server))
     signal.pause()
 

@@ -2,7 +2,6 @@ services:
   producer:
     build: .
     image: producer
-    container_name: producer
     extra_hosts:
       - "broker1=${CLUSTER}"
       - "broker2=${CLUSTER}"
