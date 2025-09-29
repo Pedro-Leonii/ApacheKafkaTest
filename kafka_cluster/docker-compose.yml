@@ -21,7 +21,6 @@ services:
     environment:
       <<: *common-env
       KAFKA_NODE_ID: 1
-      KAFKA_BROKER_ID: 1
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,CONTROLLER://broker1:9095
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker1:9092
     ports:
@@ -38,7 +37,6 @@ services:
     environment:
       <<: *common-env
       KAFKA_NODE_ID: 2
-      KAFKA_BROKER_ID: 2
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9093,CONTROLLER://broker2:9095
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker2:9093
     ports:
@@ -55,7 +53,6 @@ services:
     environment:
       <<: *common-env
       KAFKA_NODE_ID: 3
-      KAFKA_BROKER_ID: 3
       KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9094,CONTROLLER://broker3:9095
       KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://broker3:9094
     ports:
