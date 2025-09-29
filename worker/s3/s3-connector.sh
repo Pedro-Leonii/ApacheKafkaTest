@@ -11,13 +11,9 @@ for topic in ${topics[@]}; do
 {
     "connector.class": "io.confluent.connect.s3.S3SinkConnector",
     
-    "tasks.max": 12,
-
     "topics": "$topic",
-    "topics.dir": "topics",
     
-    "rotate.interval.ms": 3600000,
-    "flush.size": 1000,
+    "tasks.max": 12,
 
     "auto.register.schemas": false,
     "use.latest.version": true,
@@ -33,6 +29,12 @@ for topic in ${topics[@]}; do
     "timezone": "Europe/Rome",
     "timestamp.extractor": "RecordField",
     "timestamp.field": "generation_time",
+    "rotate.interval.ms": 3600000,
+    "topics.dir": "topics",
+    "flush.size": 1000,
+
+    "s3.part.retries": 4,
+    "s3.retry.backoff.ms": 200,
 
     "format.class": "io.confluent.connect.s3.format.parquet.ParquetFormat",
     "parquet.codec": "snappy"

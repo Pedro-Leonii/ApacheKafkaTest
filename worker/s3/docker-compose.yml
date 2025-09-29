@@ -2,33 +2,49 @@ name: worker-s3
 
 services:
   s3-worker:
-      build: .
-      image: s3-worker
-      container_name: s3-worker
-      ports:
-        - 8083:8083
-      extra_hosts:
-        - "broker1=${CLUSTER}"
-        - "broker2=${CLUSTER}"
-        - "broker3=${CLUSTER}"
-        - "schema_registry=${SCHEMA_REGISTRY}"
-        - "s3=${S3}"
+    build: .
+    image: s3-worker
+    container_name: s3-worker
+    ports:
+      - 8083:8083
+    extra_hosts:
+      - "broker1=${CLUSTER}"
+      - "broker2=${CLUSTER}"
+      - "broker3=${CLUSTER}"
+      - "schema_registry=${SCHEMA_REGISTRY}"
+      - "s3=${S3}"
 
-      environment:
-        CONNECT_REST_ADVERTISED_HOST_NAME: ${HOST}
-        CONNECT_REST_PORT: 8083
-        CONNECT_BOOTSTRAP_SERVERS: broker1:9092,broker2:9093,broker3:9094
-        CONNECT_GROUP_ID: s3-sink-cluster
-        CONNECT_CONFIG_STORAGE_TOPIC: _s3-connect-configs
-        CONNECT_OFFSET_STORAGE_TOPIC: _s3-connect-offsets
-        CONNECT_STATUS_STORAGE_TOPIC: _s3-connect-status
-        CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
-        CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-        CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema_registry:9095
-        CONNECT_PLUGIN_PATH: usr/share/java,/usr/share/confluent-hub-components/
-        CONNECT_FETCH_MIN_BYTES: 1048576
-        CONNECT_FETCH_MAX_WAIT_MS: 500
-        CONNECT_ERRORS_TOLLERANCE: all
-        CONNECT_ERRORS_LOG_ENABLE: true
-        CONNECT_ERRORS_DEADLETTERQUEUE_TOPIC_NAME: dlq.s3.topic
-        CONNECT_CONSUMER_PARTITION_ASSIGNMENT_STRATEGY: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
+    environment:
+      CONNECT_BOOTSTRAP_SERVERS: broker1:9092,broker2:9093,broker3:9094
+      CONNECT_GROUP_ID: s3-sink-cluster
+      CONNECT_REST_ADVERTISED_HOST_NAME: ${HOST}
+      CONNECT_REST_PORT: 8083
+      CONNECT_LISTENERS: http://0.0.0.0:8083
+      CONNECT_ADVERTISED_LISTENERS: http://0.0.0.0:8083
+      CONNECT_CONFIG_STORAGE_TOPIC: _s3-connect-configs
+      CONNECT_OFFSET_STORAGE_TOPIC: _s3-connect-offsets
+      CONNECT_STATUS_STORAGE_TOPIC: _s3-connect-status
+      CONNECT_PLUGIN_PATH: /usr/share/java,/usr/share/confluent-hub-components/
+      
+      CONNECT_TASK_SHUTDOWN_GRACEFULLY_TIMEOUT_MS: 5000
+      CONNECT_AUTO_OFFSET_RESET: latest
+      CONNECT_FETCH_MIN_BYTES: 1048576
+      CONNECT_FETCH_MAX_WAIT_MS: 500
+      CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
+      CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema_registry:9095
+      CONNECT_ERRORS_RETRY_TIMEOUT: 3600 
+      CONNECT_ERRORS_LOG_ENABLE: true 
+      CONNECT_ERRORS_LOG_INCLUDE_MESSAGES: true
+      CONNECT_ERRORS_TOLERANCE: all
+      CONNECT_ERRORS_DEADLETTERQUEUE_TOPIC_NAME: dlq.s3.topic
+
+      CONNECT_SCHEDULED_REBALANCE_MAX_DELAY_MS: 300000
+      CONNECT_WORKER_UNSYNC_BACKOFF_MS: 300000
+      CONNECT_REBALANCE_TIMEOUT_MS: 10000
+      CONNECT_WORKER_SYNC_TIMEOUT_MS: 3000
+      CONNECT_SESSION_TIMEOUT_MS: 6000
+      CONNECT_HEARTBEAT_INTERVAL_MS: 1800
+      CONNECT_CONNECTIUONS_MAX_IDLE_MS: 540000
+
+      CONNECT_CONSUMER_PARTITION_ASSIGNMENT_STRATEGY: org.apache.kafka.clients.consumer.CooperativeStickyAssignor
