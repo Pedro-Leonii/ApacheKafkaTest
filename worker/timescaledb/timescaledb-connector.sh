@@ -20,12 +20,18 @@ for topic in ${topics[@]}; do
     "connection.user": "$connection_user",
     "connection.password": "$connection_password",
 
-    "db.timezone": "Europe/Rome",
+    "db.timezone": "UTC",
     "insert.mode": "upsert",
     "pk.mode": "record_value",
     "pk.fields": "generation_time, server_id",
 
-    "table.name.format": "${topic//./_}"
+    "batch.size": 1000,
+    
+    "table.name.format": "${topic//./_}",
+    
+    "max.retries": 4,
+    "retry.backoff.ms": 3000,
+    "connection.attempts": 4
 }
 EOF
 done
