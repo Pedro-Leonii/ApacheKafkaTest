@@ -16,7 +16,7 @@ class ServerSimulation:
             r.start()
     
     def stop(self) -> None:
-        self.stop_event.set()
+        self._stop_event.set()
         for r in self._runners:
             r.join()
         ProducerFacade.flush()
