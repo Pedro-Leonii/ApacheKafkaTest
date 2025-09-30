@@ -8,7 +8,7 @@ CREATE DOMAIN cpu_percentage AS int CHECK (VALUE > 0 AND VALUE < 100);
 
 CREATE TABLE servers_logs_access(
     server_id varchar(255) NOT NULL,
-    generation_time timestampz NOT NULL,
+    generation_time timestamp with time zone NOT NULL,
     user_ip varchar(45) NOT NULL,
     username varchar(255),
     request_url varchar(1000),
@@ -25,11 +25,12 @@ WITH(
     tsdb.segmentby='server_id'
 );
 
+SELECT * FROM add_dimension('servers_logs_access', by_hash('server_id', 12));
 CALL add_columnstore_policy('servers_logs_access', after => INTERVAL '1d');
 
 CREATE TABLE servers_logs_application(
     server_id varchar(255) NOT NULL,
-    generation_time timestampz NOT NULL,
+    generation_time timestamp with time zone NOT NULL,
     severity varchar(10) NOT NULL,
     msg TEXT NOT NULL,
     source_thread varchar(100) NOT NULL,
@@ -44,11 +45,12 @@ WITH(
     tsdb.segmentby='server_id'
 );
 
+SELECT * FROM add_dimension('servers_logs_application', by_hash('server_id', 12));
 CALL add_columnstore_policy('servers_logs_application', after => INTERVAL '1d');
 
 CREATE TABLE servers_metrics(
     server_id varchar(255) NOT NULL,
-    generation_time timestampz NOT NULL,
+    generation_time timestamp with time zone NOT NULL,
     cpu_usage cpu_percentage NOT NULL,
     running_threads unsigned_int NOT NULL,
     current_users unsigned_int NOT NULL,
@@ -62,5 +64,6 @@ WITH(
     tsdb.segmentby='server_id'
 );
 
+SELECT * FROM add_dimension('servers_metrics', by_hash('server_id', 12));
 CALL add_columnstore_policy('servers_metrics', after => INTERVAL '1d');
 
