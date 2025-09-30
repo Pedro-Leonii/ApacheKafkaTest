@@ -61,10 +61,10 @@ services:
       - cluster-net
   
   topics-creator:
-    image: apache/kafka
+    build:
+      context: ./topic_creator
+    image: topic-creator
     container_name: topic-creator
-    volumes:
-      - ./topic-creation.sh:/opt/kafka/setup/topic-creation.sh
     depends_on:
       - broker1
       - broker2

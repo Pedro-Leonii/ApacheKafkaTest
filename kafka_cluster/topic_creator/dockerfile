@@ -1,0 +1,3 @@
+FROM apache/kafka:latest
+
+COPY ./topic-creation.sh /opt/kafka/setup/topic-creation.sh
