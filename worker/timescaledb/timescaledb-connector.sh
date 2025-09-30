@@ -1,6 +1,6 @@
 worker_addr=$1
 connection_password=$2
-connection_url="jdbc:postgresql://timescaledb:8888/kafka"
+connection_url="jdbc:postgresql://timescaledb:10010/kafka"
 connection_user="postgres"
 
 topics=(servers.logs.access servers.logs.application servers.metrics)
@@ -8,7 +8,7 @@ topics=(servers.logs.access servers.logs.application servers.metrics)
 for topic in ${topics[@]}; do 
     connector="timescaledb-${topic//./-}"
     curl -i -X PUT -H "Accept:application/json"\
-            -H "Content-Type:application/json" "http://$worker_addr:8083/connectors/$connector/config" \
+            -H "Content-Type:application/json" "http://$worker_addr:10006/connectors/$connector/config" \
             -d  @- <<EOF
 {
     "connector.class": "io.confluent.connect.jdbc.JdbcSinkConnector",

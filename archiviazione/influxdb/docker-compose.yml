@@ -3,7 +3,7 @@ services:
     container_name: influxdb3-core
     image: influxdb:3-core
     ports:
-      - 8181:8181
+      - 10009:8181
     environment:
       INFLUXDB3_NODE_IDENTIFIER_PREFIX: node
       INFLUXDB3_OBJECT_STORE:  file

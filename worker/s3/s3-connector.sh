@@ -6,7 +6,7 @@ topics=(servers.logs.access servers.logs.application servers.metrics)
 for topic in ${topics[@]}; do 
     connector="s3-${topic//./-}"
     curl -i -X PUT -H "Accept:application/json"\
-        -H "Content-Type:application/json" "http://$worker_addr:8083/connectors/$connector/config" \
+        -H "Content-Type:application/json" "http://$worker_addr:10007/connectors/$connector/config" \
         -d  @- <<EOF
 {
     "connector.class": "io.confluent.connect.s3.S3SinkConnector",
@@ -18,7 +18,7 @@ for topic in ${topics[@]}; do
     "auto.register.schemas": false,
     "use.latest.version": true,
 
-    "store.url": "http://$s3_host:9000",
+    "store.url": "http://$s3_host:10008",
     "s3.bucket.name": "testbucket",
     "storage.class": "io.confluent.connect.s3.storage.S3Storage",
     "aws.access.key.id": "none",

@@ -5,7 +5,7 @@ services:
       build: .
       image: timescaledb-worker
       ports:
-        - 8083:8083
+        - 10006:10006
       extra_hosts:
         - "broker1=${CLUSTER}"
         - "broker2=${CLUSTER}"
@@ -13,12 +13,12 @@ services:
         - "schema_registry=${SCHEMA_REGISTRY}"
         - "timescaledb=${TIMESCALEDB}"
       environment:
-        CONNECT_BOOTSTRAP_SERVERS: broker1:9092,broker2:9093,broker3:9094
+        CONNECT_BOOTSTRAP_SERVERS: broker1:10001,broker2:10002,broker3:10003
         CONNECT_GROUP_ID: timescaledb-sink-cluster
         CONNECT_REST_ADVERTISED_HOST_NAME: ${HOST}
-        CONNECT_REST_PORT: 8083
-        CONNECT_LISTENERS: http://0.0.0.0:8083
-        CONNECT_ADVERTISED_LISTENERS: http://0.0.0.0:8083
+        CONNECT_REST_PORT: 10006
+        CONNECT_LISTENERS: http://0.0.0.0:10006
+        CONNECT_ADVERTISED_LISTENERS: http://0.0.0.0:10006
         CONNECT_CONFIG_STORAGE_TOPIC: _timescaledb-connect-configs
         CONNECT_OFFSET_STORAGE_TOPIC: _timescaledb-connect-offsets
         CONNECT_STATUS_STORAGE_TOPIC: _timescaledb-connect-status
@@ -30,7 +30,7 @@ services:
         CONNECT_FETCH_MAX_WAIT_MS: 500
         CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
         CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-        CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema_registry:9095
+        CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema_registry:10005
         CONNECT_ERRORS_RETRY_TIMEOUT: 3600 
         CONNECT_ERRORS_LOG_ENABLE: true 
         CONNECT_ERRORS_LOG_INCLUDE_MESSAGES: true

@@ -8,8 +8,8 @@ services:
       - "broker3=${CLUSTER}"
       - "schema_registry=${SCHEMA_REGISTRY}"
     environment:
-      BOOTSTRAP_SERVERS: broker1:9092,broker2:9093,broker3:9094
+      BOOTSTRAP_SERVERS: broker1:10001,broker2:10002,broker3:10003
       INTERVAL_METRICS: 0.1
       LAMBDA_LOGS: 1000
-      SCHEMA_REGISTRY_URL: http://schema_registry:9095
+      SCHEMA_REGISTRY_URL: http://schema_registry:10005
   

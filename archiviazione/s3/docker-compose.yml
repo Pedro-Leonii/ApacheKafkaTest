@@ -9,6 +9,6 @@ services:
       JCLOUDS_PROVIDER: filesystem-nio2
       JCLOUDS_FILESYSTEM_BASEDIR: /data
     ports:
-      - 9000:8080
+      - 10008:8080
     volumes:
       - ./s3-data:/data

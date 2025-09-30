@@ -11,7 +11,7 @@ services:
         - "schema_registry=${SCHEMA_REGISTRY}"
         - "influx=${INFLUX}"
     environment:
-      INFLUX_URL: http://influx:8181
-      SCHEMA_REGISTRY_URL: http://schema_registry:9095
+      INFLUX_URL: http://influx:10009
+      SCHEMA_REGISTRY_URL: http://schema_registry:10005
     volumes:
       - ./telegraf.conf:/etc/telegraf/telegraf.conf

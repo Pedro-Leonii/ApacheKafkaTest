@@ -6,7 +6,7 @@ services:
     image: s3-worker
     container_name: s3-worker
     ports:
-      - 8083:8083
+      - 10007:10007
     extra_hosts:
       - "broker1=${CLUSTER}"
       - "broker2=${CLUSTER}"
@@ -15,12 +15,12 @@ services:
       - "s3=${S3}"
 
     environment:
-      CONNECT_BOOTSTRAP_SERVERS: broker1:9092,broker2:9093,broker3:9094
+      CONNECT_BOOTSTRAP_SERVERS: broker1:10001,broker2:10002,broker3:10003
       CONNECT_GROUP_ID: s3-sink-cluster
       CONNECT_REST_ADVERTISED_HOST_NAME: ${HOST}
-      CONNECT_REST_PORT: 8083
-      CONNECT_LISTENERS: http://0.0.0.0:8083
-      CONNECT_ADVERTISED_LISTENERS: http://0.0.0.0:8083
+      CONNECT_REST_PORT: 10007
+      CONNECT_LISTENERS: http://0.0.0.0:10007
+      CONNECT_ADVERTISED_LISTENERS: http://0.0.0.0:10007
       CONNECT_CONFIG_STORAGE_TOPIC: _s3-connect-configs
       CONNECT_OFFSET_STORAGE_TOPIC: _s3-connect-offsets
       CONNECT_STATUS_STORAGE_TOPIC: _s3-connect-status
@@ -32,7 +32,7 @@ services:
       CONNECT_FETCH_MAX_WAIT_MS: 500
       CONNECT_KEY_CONVERTER: org.apache.kafka.connect.storage.StringConverter
       CONNECT_VALUE_CONVERTER: io.confluent.connect.avro.AvroConverter
-      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema_registry:9095
+      CONNECT_VALUE_CONVERTER_SCHEMA_REGISTRY_URL: http://schema_registry:10005
       CONNECT_ERRORS_RETRY_TIMEOUT: 3600 
       CONNECT_ERRORS_LOG_ENABLE: true 
       CONNECT_ERRORS_LOG_INCLUDE_MESSAGES: true
