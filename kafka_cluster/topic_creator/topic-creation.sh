@@ -1,6 +1,6 @@
 #!/bin/bash
 
-servers="broker1:9092,broker2:9093,broker3:9094"
+servers="broker1:10001,broker2:10002,broker3:10003"
 insync=2
 replication=3
 partition_n=12
