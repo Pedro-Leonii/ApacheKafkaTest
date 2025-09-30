@@ -1,7 +1,9 @@
 services:
   
   timescaledb:
-    image: timescale/timescaledb:latest-pg17
+    build:
+      context: ./timescale
+    image: timescaledb
     container_name: timescaledb
     hostname: timescaledb
     ports:
@@ -9,5 +11,3 @@ services:
     environment:
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       TIMESCALEDB_TELEMETRY: off
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
